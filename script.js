@@ -23,7 +23,8 @@ window.addEventListener('scroll', () => {
         return;
     }
 
-    navbar.style.borderBottomColor = window.scrollY > 18 ? 'rgba(148, 163, 184, 0.3)' : 'transparent';
+    // Frosted glass on scroll
+    navbar.classList.toggle('scrolled', window.scrollY > 30);
 
     let currentSection = '';
     sections.forEach((section) => {
@@ -131,8 +132,44 @@ const revealObserver = new IntersectionObserver((entries) => {
 function onPageReady() {
     // Start typing effect
     setTimeout(runTypingEffect, 600);
-    // Start reveal animations
-    revealElements.forEach((element) => revealObserver.observe(element));
+
+    // Staggered reveal animations
+    revealElements.forEach((element, index) => {
+        // Apply stagger delay for grid items
+        const gridParents = [
+            '.skills-grid', '.education-grid', '.projects-grid'
+        ];
+        let isGrid = false;
+        for (const sel of gridParents) {
+            const parent = document.querySelector(sel);
+            if (parent && parent.contains(element)) {
+                isGrid = true;
+                break;
+            }
+        }
+
+        if (isGrid) {
+            // Find sibling index for stagger
+            const siblings = Array.from(element.parentElement?.children || []);
+            const sibIdx = siblings.indexOf(element);
+            element.style.animationDelay = `${sibIdx * 0.08}s`;
+        }
+
+        revealObserver.observe(element);
+    });
+
+    // Subtle mouse-tilt on project cards (CSS transform)
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            card.style.transform = `translateY(-6px) rotateX(${(-y * 6).toFixed(1)}deg) rotateY(${(x * 6).toFixed(1)}deg)`;
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+        });
+    });
 }
 
 if (document.readyState === 'complete') {
