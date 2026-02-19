@@ -1,11 +1,11 @@
-# 🌟 Çağatay Gürses - Professional Portfolio Website
+# 🌟 Çağatay Gürses — Professional Portfolio Website
 
-A modern, responsive, and beautifully designed portfolio website built with HTML, CSS, and JavaScript.
+A modern, responsive portfolio website built with HTML, CSS, and JavaScript.
 
 ## ✨ Features
 
-- **Responsive Design**: Fully responsive layout that works seamlessly on all devices (desktop, tablet, mobile)
-- **Modern UI/UX**: Clean and professional design with smooth animations and transitions
+- **Responsive Design**: Fully responsive layout across desktop, tablet, and mobile
+- **Modern UI/UX**: Clean, professional design with smooth transitions
 - **Interactive Elements**: 
   - Animated typing effect in hero section
   - Smooth scrolling navigation
@@ -20,25 +20,25 @@ A modern, responsive, and beautifully designed portfolio website built with HTML
   - Education & Certifications
   - Featured Projects portfolio
   - Contact form with social links
-- **Performance Optimized**: Fast loading times and smooth animations
-- **SEO Friendly**: Proper meta tags and semantic HTML
+- **Performance Optimized**: Lightweight, fast-loading experience
+- **SEO Friendly**: Semantic HTML and essential meta tags
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-You only need a modern web browser to run this website. No additional installations required!
+You only need a modern web browser to run this website.
 
 ### Installation
 
 1. **Clone or download this repository**:
    ```bash
-   git clone https://github.com/yourusername/portfolio-website.git
+   git clone https://github.com/cagataygurses/cagatay-gurses.git
    ```
 
 2. **Navigate to the project folder**:
    ```bash
-   cd portfolio-website/cagatay-gurses
+   cd cagatay-gurses
    ```
 
 3. **Open the website**:
@@ -52,10 +52,7 @@ For the best experience, especially when testing, use a local server:
 **Option 1: Using Python**
 ```bash
 # Python 3
-python -m http.server 8000
-
-# Python 2
-python -m SimpleHTTPServer 8000
+python3 -m http.server 8000
 ```
 
 **Option 2: Using Node.js (http-server)**
@@ -72,15 +69,15 @@ http-server -p 8000
 2. Right-click on `index.html`
 3. Select "Open with Live Server"
 
-Then visit: `http://localhost:8000`
+Then open: `http://localhost:8000`
 
 ## 📝 Customization Guide
 
 ### 1. Personal Information
 
-Update your personal details in `index.html`:
+Update profile details in `index.html`:
 
-- **Name**: Search for "Çağatay Gürses" and replace with your name
+- **Name**: Search for "Çağatay Gürses" and update as needed
 - **Professional Title**: Update the typing text array in `script.js`:
   ```javascript
   const texts = [
@@ -89,9 +86,9 @@ Update your personal details in `index.html`:
       // ... add more
   ];
   ```
-- **Profile Image**: Replace the placeholder image URL in the About section
+- **Profile Image**: Replace the profile image source in the About section
 - **Contact Information**: Update email, phone, location in the Contact section
-- **Social Links**: Update all social media links (LinkedIn, GitHub, Twitter, etc.)
+- **Social Links**: Update all social links (LinkedIn, GitHub, etc.)
 
 ### 2. Content Sections
 
@@ -166,12 +163,12 @@ The contact form currently shows a success message. To make it functional:
    git add .
    git commit -m "Initial commit"
    git branch -M main
-   git remote add origin https://github.com/yourusername/portfolio.git
+   git remote add origin https://github.com/cagataygurses/cagatay-gurses.git
    git push -u origin main
    ```
 3. Go to repository Settings → Pages
 4. Select the main branch and root folder
-5. Your site will be live at `https://yourusername.github.io/portfolio/`
+5. Your site will be live at `https://cagataygurses.github.io/cagatay-gurses/`
 
 ### Deploy to Netlify
 
@@ -230,13 +227,13 @@ cagatay-gurses/
 
 ## 🤝 Contributing
 
-Feel free to fork this project and customize it for your own use!
+Feel free to fork this project and adapt it to your own portfolio needs.
 
 ## 📧 Contact
 
-If you have questions about this template, feel free to reach out:
-- Email: your.email@example.com
-- LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
+If you have questions or collaboration ideas, feel free to reach out:
+- Email: cgtygrss@gmail.com
+- LinkedIn: [Çağatay Gürses](https://linkedin.com/in/cagataygurses)
 
 ## 📜 License
 
