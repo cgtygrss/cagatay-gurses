@@ -110,13 +110,6 @@ function runTypingEffect() {
     setTimeout(runTypingEffect, 55);
 }
 
-// Wait for all resources (images, etc.) before starting typing effect
-if (document.readyState === 'complete') {
-    setTimeout(runTypingEffect, 700);
-} else {
-    window.onload = () => setTimeout(runTypingEffect, 700);
-}
-
 // Reveal animations on scroll
 const revealElements = document.querySelectorAll(
     '.about-content, .skill-category, .timeline-item, .education-card, .project-card, .contact-content'
@@ -130,19 +123,22 @@ const revealObserver = new IntersectionObserver((entries) => {
         }
     });
 }, {
-    threshold: 0.12,
-    rootMargin: '0px 0px -40px 0px'
+    threshold: 0.10,
+    rootMargin: '0px 0px -30px 0px'
 });
 
-// Delay reveal animations until all resources are loaded
-function startRevealAnimations() {
+// Single load handler — prevents double window.onload assignment overwriting each other
+function onPageReady() {
+    // Start typing effect
+    setTimeout(runTypingEffect, 600);
+    // Start reveal animations
     revealElements.forEach((element) => revealObserver.observe(element));
 }
 
 if (document.readyState === 'complete') {
-    startRevealAnimations();
+    onPageReady();
 } else {
-    window.onload = startRevealAnimations;
+    window.addEventListener('load', onPageReady);
 }
 
 // Contact form mailto fallback
@@ -189,7 +185,10 @@ function setChatbotOpen(open) {
 
     if (open) {
         chatbotBadge.style.display = 'none';
-        chatbotInput.focus();
+        // Delay focus slightly on mobile so the keyboard doesn't jump the layout
+        setTimeout(() => chatbotInput.focus(), 150);
+    } else {
+        chatbotInput.blur();
     }
 }
 

@@ -1173,8 +1173,20 @@ img {
 }
 
 /* ===== Utility Animations ===== */
+
+/* Pre-hide all reveal targets until the IntersectionObserver adds .fade-in */
+.about-content:not(.fade-in),
+.skill-category:not(.fade-in),
+.timeline-item:not(.fade-in),
+.education-card:not(.fade-in),
+.project-card:not(.fade-in),
+.contact-content:not(.fade-in) {
+    opacity: 0;
+    transform: translateY(18px);
+}
+
 .fade-in {
-    animation: fadeIn 0.7s ease both;
+    animation: fadeIn 0.65s ease both;
 }
 
 @keyframes fadeIn {
@@ -1302,8 +1314,21 @@ img {
         right: 0;
         bottom: 0;
         width: 100vw;
-        height: 100svh;
+        /* Full height minus safe area for notched phones */
+        height: calc(100svh - env(safe-area-inset-top, 0px));
         border-radius: 0;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    /* Prevent iOS from zooming into the chat input */
+    .chatbot-input input {
+        font-size: 16px;
+    }
+
+    /* Hide the toggle FAB when chatbot is open on mobile */
+    .chatbot-toggle.active {
+        opacity: 0;
+        pointer-events: none;
     }
 
     .chatbot-toggle {
@@ -1311,5 +1336,6 @@ img {
         bottom: 16px;
         width: 56px;
         height: 56px;
+        transition: opacity var(--transition);
     }
 }
