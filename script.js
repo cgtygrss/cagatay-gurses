@@ -362,3 +362,175 @@ if (chatbotIsReady()) {
         }
     });
 }
+
+// ==========================================
+// 3D Background with Three.js & GSAP
+// ==========================================
+
+function init3DBackground() {
+    const canvas = document.querySelector('#webgl-canvas');
+    if (!canvas) return;
+
+    // SCENE, CAMERA, RENDERER
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 25;
+
+    const renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        alpha: true,
+        antialias: true
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // PARTICLES (Stars/Dust)
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 1500;
+    const posArray = new Float32Array(particlesCount * 3);
+
+    for (let i = 0; i < particlesCount * 3; i++) {
+        // Spread particles across a wide area
+        posArray[i] = (Math.random() - 0.5) * 100;
+    }
+
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+    const particlesMaterial = new THREE.PointsMaterial({
+        size: 0.08,
+        color: 0xa855f7, // var(--primary-light)
+        transparent: true,
+        opacity: 0.6,
+        blending: THREE.AdditiveBlending
+    });
+
+    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particlesMesh);
+
+    // ABSTRACT SHAPE (Wireframe Icosahedron)
+    const shapeGeometry = new THREE.IcosahedronGeometry(14, 2);
+    const shapeMaterial = new THREE.MeshBasicMaterial({
+        color: 0x38bdf8, // Light cyan
+        wireframe: true,
+        transparent: true,
+        opacity: 0.08
+    });
+    const abstractShape = new THREE.Mesh(shapeGeometry, shapeMaterial);
+    scene.add(abstractShape);
+    
+    // Add another smaller shape inside
+    const innerShapeGeometry = new THREE.IcosahedronGeometry(8, 1);
+    const innerShapeMaterial = new THREE.MeshBasicMaterial({
+        color: 0x7c3aed, // var(--primary)
+        wireframe: true,
+        transparent: true,
+        opacity: 0.15
+    });
+    const innerShape = new THREE.Mesh(innerShapeGeometry, innerShapeMaterial);
+    abstractShape.add(innerShape);
+
+    // MOUSE PARALLAX
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let windowHalfX = window.innerWidth / 2;
+    let windowHalfY = window.innerHeight / 2;
+
+    document.addEventListener('mousemove', (event) => {
+        mouseX = (event.clientX - windowHalfX);
+        mouseY = (event.clientY - windowHalfY);
+    });
+
+    // RESIZE
+    window.addEventListener('resize', () => {
+        windowHalfX = window.innerWidth / 2;
+        windowHalfY = window.innerHeight / 2;
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // ANIMATION LOOP
+    const clock = new THREE.Clock();
+
+    function animate() {
+        requestAnimationFrame(animate);
+        const elapsedTime = clock.getElapsedTime();
+
+        // Rotate particles slowly
+        particlesMesh.rotation.y = elapsedTime * 0.03;
+        particlesMesh.rotation.x = elapsedTime * 0.015;
+
+        // Rotate abstract shapes
+        abstractShape.rotation.x = elapsedTime * 0.05;
+        abstractShape.rotation.y = elapsedTime * 0.08;
+        
+        innerShape.rotation.x = -elapsedTime * 0.1;
+        innerShape.rotation.y = -elapsedTime * 0.12;
+
+        // Easing for mouse parallax
+        targetX = mouseX * 0.001;
+        targetY = mouseY * 0.001;
+        
+        // Apply parallax to main shape group
+        abstractShape.rotation.y += 0.05 * (targetX - abstractShape.rotation.y);
+        abstractShape.rotation.x += 0.05 * (targetY - abstractShape.rotation.x);
+
+        // Apply slight parallax to camera for extra depth
+        camera.position.x += (mouseX * 0.005 - camera.position.x) * 0.05;
+        camera.position.y += (-mouseY * 0.005 - camera.position.y) * 0.05;
+        camera.lookAt(scene.position);
+
+        // Gentle float for shape
+        abstractShape.position.y = Math.sin(elapsedTime * 0.5) * 1.5;
+
+        renderer.render(scene, camera);
+    }
+    
+    animate();
+
+    // GSAP SCROLL ANIMATION
+    // Ensure GSAP and ScrollTrigger are loaded
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Move abstract shape across the screen / zoom out as we scroll
+        gsap.to(abstractShape.position, {
+            z: -20, // push back
+            y: -10,
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1 // smooth scrubbing
+            }
+        });
+
+        // Rotate faster based on scroll
+        gsap.to(abstractShape.rotation, {
+            z: Math.PI,
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1.5
+            }
+        });
+        
+        // Move particles slightly up
+        gsap.to(particlesMesh.position, {
+            y: 15,
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 2
+            }
+        });
+    }
+}
+
+// Initialize 3D on load
+window.addEventListener('DOMContentLoaded', init3DBackground);
